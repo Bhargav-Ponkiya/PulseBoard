@@ -1,0 +1,118 @@
+services:
+  - type: web
+    name: pulseboard-api-gateway
+    env: docker
+    buildCommand: docker build -f apps/api-gateway/Dockerfile -t api-gateway .
+    startCommand: docker run -p 3001:3001 api-gateway
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        fromGroup: pulseboard-env
+      - key: MONGODB_URI
+        fromGroup: pulseboard-env
+      - key: REDIS_URL
+        fromGroup: pulseboard-env
+      - key: RABBITMQ_URL
+        fromGroup: pulseboard-env
+      - key: JWT_SECRET
+        fromGroup: pulseboard-env
+      - key: JWT_REFRESH_SECRET
+        fromGroup: pulseboard-env
+      - key: ENCRYPTION_KEY
+        fromGroup: pulseboard-env
+      - key: INTERNAL_SECRET
+        fromGroup: pulseboard-env
+      - key: FRONTEND_URL
+        fromGroup: pulseboard-env
+
+  - type: web
+    name: pulseboard-poller-service
+    env: docker
+    buildCommand: docker build -f apps/poller-service/Dockerfile -t poller-service .
+    startCommand: docker run -p 3002:3002 poller-service
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 3002
+      - key: API_GATEWAY_URL
+        fromGroup: pulseboard-env
+      - key: RABBITMQ_URL
+        fromGroup: pulseboard-env
+      - key: INTERNAL_SECRET
+        fromGroup: pulseboard-env
+
+  - type: web
+    name: pulseboard-ingestor-service
+    env: docker
+    buildCommand: docker build -f apps/ingestor-service/Dockerfile -t ingestor-service .
+    startCommand: docker run -p 3003:3003 ingestor-service
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 3003
+      - key: DATABASE_URL
+        fromGroup: pulseboard-env
+      - key: MONGODB_URI
+        fromGroup: pulseboard-env
+      - key: REDIS_URL
+        fromGroup: pulseboard-env
+      - key: RABBITMQ_URL
+        fromGroup: pulseboard-env
+      - key: INTERNAL_SECRET
+        fromGroup: pulseboard-env
+      - key: GEMINI_API_KEY
+        fromGroup: pulseboard-env
+
+  - type: web
+    name: pulseboard-alert-service
+    env: docker
+    buildCommand: docker build -f apps/alert-service/Dockerfile -t alert-service .
+    startCommand: docker run -p 3004:3004 alert-service
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 3004
+      - key: DATABASE_URL
+        fromGroup: pulseboard-env
+      - key: MONGODB_URI
+        fromGroup: pulseboard-env
+      - key: REDIS_URL
+        fromGroup: pulseboard-env
+      - key: RABBITMQ_URL
+        fromGroup: pulseboard-env
+      - key: INTERNAL_SECRET
+        fromGroup: pulseboard-env
+      - key: GEMINI_API_KEY
+        fromGroup: pulseboard-env
+      - key: GROQ_API_KEY
+        fromGroup: pulseboard-env
+
+envVarGroups:
+  - name: pulseboard-env
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: RABBITMQ_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: INTERNAL_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      - key: API_GATEWAY_URL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false

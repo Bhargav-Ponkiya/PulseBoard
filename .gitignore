@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+.next/
+frontend/.next/
+out/
+build/
+
+# Environment / Secrets
+.env
+.env.*
+!.env.example
+CREDENTIALS.md
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Project Specific Exclusions (requested by user)
+PulseBoard_*.md
+PulseBoard_OpenCode_Workflow.md
+LOCAL_TESTING.md
+opencode.json.tui-migration.bak
+opencode_test.json
+tui.json
+pulseboard_ref_file/
+scratch/
+
+# IDE / AI tools
+.gemini/
+.idea/
+.vscode/
+*.swp
+*.bak
