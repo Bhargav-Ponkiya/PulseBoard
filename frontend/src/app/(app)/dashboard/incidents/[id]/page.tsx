@@ -187,6 +187,42 @@ export default function IncidentDetailPage({ params }: { params: { id: string } 
     );
   }
 
+  const [ongoingDowntime, setOngoingDowntime] = useState<string>('');
+
+  useEffect(() => {
+    if (!incident || incident.status !== 'open') {
+      setOngoingDowntime('');
+      return;
+    }
+
+    const calculateElapsed = () => {
+      const start = new Date(incident.startedAt).getTime();
+      const now = Date.now();
+      const diffMs = now - start;
+      if (diffMs < 0) return '0s';
+      const totalSecs = Math.floor(diffMs / 1000);
+      const hrs = Math.floor(totalSecs / 3600);
+      const mins = Math.floor((totalSecs % 3600) / 60);
+      const secs = totalSecs % 60;
+
+      if (hrs > 0) {
+        return `${hrs}h ${mins}m ${secs}s`;
+      }
+      if (mins > 0) {
+        return `${mins}m ${secs}s`;
+      }
+      return `${secs}s`;
+    };
+
+    setOngoingDowntime(calculateElapsed());
+
+    const timer = setInterval(() => {
+      setOngoingDowntime(calculateElapsed());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [incident]);
+
   if (!incident) {
     return notFound();
   }
@@ -276,7 +312,16 @@ export default function IncidentDetailPage({ params }: { params: { id: string } 
                   <Clock className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-bold uppercase tracking-wider">Total Downtime</span>
                 </div>
-                <p className="font-semibold text-sm">{incident.duration ?? 'Calculating...'}</p>
+                <p className="font-semibold text-sm">
+                  {incident.status === 'open' ? (
+                    <span className="text-destructive font-mono flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-ping" />
+                      {ongoingDowntime || 'Calculating...'}
+                    </span>
+                  ) : (
+                    incident.duration ?? 'N/A'
+                  )}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -320,16 +365,16 @@ export default function IncidentDetailPage({ params }: { params: { id: string } 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {report.immediate_fix && (
                   <div className="space-y-3">
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-blue-400">Immediate Remediation</h4>
-                    <pre className="p-4 rounded-xl bg-blue-950/20 border border-blue-500/20 text-xs font-mono whitespace-pre-wrap text-blue-100">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Immediate Remediation</h4>
+                    <pre className="p-4 rounded-xl bg-blue-500/5 dark:bg-blue-950/25 border border-blue-500/20 text-xs font-mono whitespace-pre-wrap text-blue-800 dark:text-blue-200">
                       {report.immediate_fix}
                     </pre>
                   </div>
                 )}
                 {report.prevention && (
                   <div className="space-y-3">
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-green-400">Future Prevention</h4>
-                    <div className="p-4 rounded-xl bg-green-950/20 border border-green-500/20 text-sm text-green-100 leading-relaxed">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-green-600 dark:text-green-400">Future Prevention</h4>
+                    <div className="p-4 rounded-xl bg-green-500/5 dark:bg-green-950/25 border border-green-500/20 text-sm text-green-800 dark:text-green-200 leading-relaxed">
                       {report.prevention}
                     </div>
                   </div>

@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { generateText } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createGroq } from '@ai-sdk/groq';
 
 export interface IncidentContext {
   monitor: { name: string; url: string };
@@ -32,60 +31,36 @@ const DEFAULT_REPORT: IncidentReport = {
 export class AiService {
   private readonly logger = new Logger(AiService.name);
   private readonly googleProvider;
-  private readonly groqProvider;
 
   constructor(private readonly configService: ConfigService) {
     const geminiKey = this.configService.get<string>('GEMINI_API_KEY');
-    const groqKey = this.configService.get<string>('GROQ_API_KEY');
 
     if (geminiKey) {
       this.googleProvider = createGoogleGenerativeAI({ apiKey: geminiKey });
     }
-    if (groqKey) {
-      this.groqProvider = createGroq({ apiKey: groqKey });
-    }
   }
 
-  /** Generates an AI-powered incident report using Gemini with Groq fallback. */
+  /** Generates an AI-powered incident report using Gemini. */
   async generateIncidentReport(
     context: IncidentContext,
   ): Promise<IncidentReport> {
     const prompt = this.buildPrompt(context);
 
-    let reportText: string | null = null;
-
-    if (this.googleProvider) {
-      try {
-        const result = await generateText({
-          model: this.googleProvider('gemini-2.5-flash'),
-          prompt,
-        });
-        reportText = result.text;
-      } catch (err) {
-        this.logger.warn('Gemini AI failed, falling back to Groq', err);
-      }
-    } else {
+    if (!this.googleProvider) {
       this.logger.warn('Gemini provider not configured');
+      return DEFAULT_REPORT;
     }
 
-    if (!reportText) {
-      if (!this.groqProvider) {
-        this.logger.warn('Groq fallback skipped — provider not configured');
-        return DEFAULT_REPORT;
-      }
-      try {
-        const result = await generateText({
-          model: this.groqProvider('llama-4-scout-17b-16e-instruct'),
-          prompt,
-        });
-        reportText = result.text;
-      } catch (err) {
-        this.logger.error('Groq fallback also failed', err);
-        return DEFAULT_REPORT;
-      }
+    try {
+      const result = await generateText({
+        model: this.googleProvider('gemini-2.5-flash'),
+        prompt,
+      });
+      return this.parseReport(result.text);
+    } catch (err) {
+      this.logger.error('Gemini AI generation failed', err);
+      return DEFAULT_REPORT;
     }
-
-    return this.parseReport(reportText);
   }
 
   /** Builds the prompt string for the AI model from incident context. */
