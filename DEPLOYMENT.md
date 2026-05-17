@@ -54,15 +54,15 @@ We use `render.yaml` (Infrastructure as Code) to deploy the 4 microservices on R
 3. Select your GitHub repository for PulseBoard.
 4. Render will automatically detect the `render.yaml` file in the root.
 5. Provide the required environment variables when prompted (these map to `pulseboard-env`):
-   - `DATABASE_URL` (Neon)
-   - `MONGODB_URI` (Atlas)
-   - `REDIS_URL` (Upstash)
-   - `RABBITMQ_URL` (CloudAMQP)
-   - `API_GATEWAY_URL` (You will need to update this after the gateway deploys, e.g., `https://pulseboard-api-gateway.onrender.com`)
-   - `FRONTEND_URL` (e.g., `https://pulseboard.vercel.app`)
-   - `GEMINI_API_KEY`
-   - `GROQ_API_KEY`
-   *(Internal secrets and JWT secrets are generated automatically per the blueprint).*
+   - `DATABASE_URL` (Neon PostgreSQL)
+   - `MONGODB_URI` (MongoDB Atlas)
+   - `REDIS_URL` (Upstash Redis)
+   - `RABBITMQ_URL` (CloudAMQP RabbitMQ)
+   - `API_GATEWAY_URL` (Update this after the gateway deploys, e.g., `https://pulseboard-api-gateway.onrender.com`)
+   - `FRONTEND_URL` (Update this after the Vercel deploy, e.g., `https://pulseboard.vercel.app`)
+   - `GEMINI_API_KEY` (Your Google AI API key)
+   - `RUN_MIGRATIONS` (Set automatically to `true` by the blueprint env group to run TypeORM schemas automatically on start!)
+   *(Internal secrets, JWT keys, and encryption seeds are generated automatically by the Blueprint).*
 6. Click **Apply**. Render will start deploying the 4 services.
 7. Note down the service URLs after deployment.
 

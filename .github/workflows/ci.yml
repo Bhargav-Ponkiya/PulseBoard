@@ -1,0 +1,44 @@
+name: PulseBoard CI Code Compliance
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate:
+    name: Lint, Format, and Type-Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Monorepo Dependencies
+        run: npm ci
+
+      - name: Check Code Formatting (Prettier)
+        run: npx prettier --check "apps/**/*.ts" "libs/**/*.ts"
+
+      - name: Check Code Linting (ESLint)
+        run: npm run lint
+
+      - name: Build Monorepo Backend (TypeScript check)
+        run: npm run build
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build Frontend (Next.js Compilation check)
+        run: |
+          cd frontend
+          npm run build

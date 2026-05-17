@@ -2,8 +2,8 @@ services:
   - type: web
     name: pulseboard-api-gateway
     env: docker
-    buildCommand: docker build -f apps/api-gateway/Dockerfile -t api-gateway .
-    startCommand: docker run -p 3001:3001 api-gateway
+    dockerfilePath: apps/api-gateway/Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     envVars:
       - key: PORT
@@ -26,12 +26,14 @@ services:
         fromGroup: pulseboard-env
       - key: FRONTEND_URL
         fromGroup: pulseboard-env
+      - key: RUN_MIGRATIONS
+        fromGroup: pulseboard-env
 
   - type: web
     name: pulseboard-poller-service
     env: docker
-    buildCommand: docker build -f apps/poller-service/Dockerfile -t poller-service .
-    startCommand: docker run -p 3002:3002 poller-service
+    dockerfilePath: apps/poller-service/Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     envVars:
       - key: PORT
@@ -46,8 +48,8 @@ services:
   - type: web
     name: pulseboard-ingestor-service
     env: docker
-    buildCommand: docker build -f apps/ingestor-service/Dockerfile -t ingestor-service .
-    startCommand: docker run -p 3003:3003 ingestor-service
+    dockerfilePath: apps/ingestor-service/Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     envVars:
       - key: PORT
@@ -68,8 +70,8 @@ services:
   - type: web
     name: pulseboard-alert-service
     env: docker
-    buildCommand: docker build -f apps/alert-service/Dockerfile -t alert-service .
-    startCommand: docker run -p 3004:3004 alert-service
+    dockerfilePath: apps/alert-service/Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     envVars:
       - key: PORT
@@ -86,8 +88,6 @@ services:
         fromGroup: pulseboard-env
       - key: GEMINI_API_KEY
         fromGroup: pulseboard-env
-      - key: GROQ_API_KEY
-        fromGroup: pulseboard-env
 
 envVarGroups:
   - name: pulseboard-env
@@ -100,6 +100,8 @@ envVarGroups:
         sync: false
       - key: RABBITMQ_URL
         sync: false
+      - key: RUN_MIGRATIONS
+        value: "true"
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
@@ -113,6 +115,4 @@ envVarGroups:
       - key: API_GATEWAY_URL
         sync: false
       - key: GEMINI_API_KEY
-        sync: false
-      - key: GROQ_API_KEY
         sync: false
