@@ -8,26 +8,7 @@ services:
     envVars:
       - key: PORT
         value: 3001
-      - key: DATABASE_URL
-        fromGroup: pulseboard-env
-      - key: MONGODB_URI
-        fromGroup: pulseboard-env
-      - key: REDIS_URL
-        fromGroup: pulseboard-env
-      - key: RABBITMQ_URL
-        fromGroup: pulseboard-env
-      - key: JWT_SECRET
-        fromGroup: pulseboard-env
-      - key: JWT_REFRESH_SECRET
-        fromGroup: pulseboard-env
-      - key: ENCRYPTION_KEY
-        fromGroup: pulseboard-env
-      - key: INTERNAL_SECRET
-        fromGroup: pulseboard-env
-      - key: FRONTEND_URL
-        fromGroup: pulseboard-env
-      - key: RUN_MIGRATIONS
-        fromGroup: pulseboard-env
+      - fromGroup: pulseboard-env
 
   - type: web
     name: pulseboard-poller-service
@@ -38,12 +19,7 @@ services:
     envVars:
       - key: PORT
         value: 3002
-      - key: API_GATEWAY_URL
-        fromGroup: pulseboard-env
-      - key: RABBITMQ_URL
-        fromGroup: pulseboard-env
-      - key: INTERNAL_SECRET
-        fromGroup: pulseboard-env
+      - fromGroup: pulseboard-env
 
   - type: web
     name: pulseboard-ingestor-service
@@ -54,18 +30,7 @@ services:
     envVars:
       - key: PORT
         value: 3003
-      - key: DATABASE_URL
-        fromGroup: pulseboard-env
-      - key: MONGODB_URI
-        fromGroup: pulseboard-env
-      - key: REDIS_URL
-        fromGroup: pulseboard-env
-      - key: RABBITMQ_URL
-        fromGroup: pulseboard-env
-      - key: INTERNAL_SECRET
-        fromGroup: pulseboard-env
-      - key: GEMINI_API_KEY
-        fromGroup: pulseboard-env
+      - fromGroup: pulseboard-env
 
   - type: web
     name: pulseboard-alert-service
@@ -76,18 +41,7 @@ services:
     envVars:
       - key: PORT
         value: 3004
-      - key: DATABASE_URL
-        fromGroup: pulseboard-env
-      - key: MONGODB_URI
-        fromGroup: pulseboard-env
-      - key: REDIS_URL
-        fromGroup: pulseboard-env
-      - key: RABBITMQ_URL
-        fromGroup: pulseboard-env
-      - key: INTERNAL_SECRET
-        fromGroup: pulseboard-env
-      - key: GEMINI_API_KEY
-        fromGroup: pulseboard-env
+      - fromGroup: pulseboard-env
 
 envVarGroups:
   - name: pulseboard-env
