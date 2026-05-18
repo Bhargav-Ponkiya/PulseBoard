@@ -2,6 +2,7 @@ services:
   - type: web
     name: pulseboard-api-gateway
     env: docker
+    plan: free
     dockerfilePath: apps/api-gateway/Dockerfile
     dockerContext: .
     healthCheckPath: /health
@@ -13,6 +14,7 @@ services:
   - type: web
     name: pulseboard-poller-service
     env: docker
+    plan: free
     dockerfilePath: apps/poller-service/Dockerfile
     dockerContext: .
     healthCheckPath: /health
@@ -24,6 +26,7 @@ services:
   - type: web
     name: pulseboard-ingestor-service
     env: docker
+    plan: free
     dockerfilePath: apps/ingestor-service/Dockerfile
     dockerContext: .
     healthCheckPath: /health
@@ -35,6 +38,7 @@ services:
   - type: web
     name: pulseboard-alert-service
     env: docker
+    plan: free
     dockerfilePath: apps/alert-service/Dockerfile
     dockerContext: .
     healthCheckPath: /health
