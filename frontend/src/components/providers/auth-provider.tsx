@@ -40,8 +40,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (res.ok) {
           const body = await res.json();
-          if (body && body.accessToken && body.user) {
-            setAuth(body.user, body.accessToken, body.refreshToken);
+          // The API Gateway wraps all successful responses in a global ResponseInterceptor:
+          // { success: true, data: { accessToken, user, refreshToken } }
+          const authData = body?.success ? body.data : body;
+
+          if (authData && authData.accessToken && authData.user) {
+            setAuth(authData.user, authData.accessToken, authData.refreshToken);
             return;
           }
         }
