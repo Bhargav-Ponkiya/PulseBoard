@@ -22,8 +22,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   accessToken: null,
   isLoading: true,
-  setAuth: (user, accessToken) => set({ user, accessToken, isLoading: false }),
-  clearAuth: () => set({ user: null, accessToken: null, isLoading: false }),
+  setAuth: (user, accessToken) => {
+    if (typeof window !== 'undefined') {
+      document.cookie = "logged_in=true; path=/; max-age=604800; SameSite=Lax";
+    }
+    set({ user, accessToken, isLoading: false });
+  },
+  clearAuth: () => {
+    if (typeof window !== 'undefined') {
+      document.cookie = "logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+    set({ user: null, accessToken: null, isLoading: false });
+  },
   setLoading: (isLoading) => set({ isLoading }),
   logout: async () => {
     const { accessToken } = get();
@@ -35,6 +45,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
     } catch {
       // ignore — client state is always cleared regardless
+    }
+    if (typeof window !== 'undefined') {
+      document.cookie = "logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
     set({ user: null, accessToken: null, isLoading: false });
   },

@@ -4,9 +4,9 @@ import type { NextRequest } from 'next/server';
 const MAX_REDIRECTS = 3;
 
 export function middleware(request: NextRequest) {
-  const refreshToken = request.cookies.get('refresh_token');
+  const loggedIn = request.cookies.get('logged_in');
 
-  if (!refreshToken) {
+  if (!loggedIn) {
     const redirectCount = parseInt(request.cookies.get('redirectCount')?.value ?? '0', 10);
     const currentPath = request.nextUrl.pathname + request.nextUrl.search;
 

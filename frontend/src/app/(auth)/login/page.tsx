@@ -6,49 +6,19 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Activity, 
-  ShieldCheck, 
-  Zap, 
-  Bell, 
-  Cpu, 
   ArrowRight,
   Loader2,
   Eye,
-  EyeOff
+  EyeOff,
+  Terminal,
+  Bot
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { apiCall, ApiError } from '@/lib/api';
 import { useAuthStore } from '@/store/auth.store';
 import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
-
-const features = [
-  {
-    icon: Activity,
-    title: 'Monitor Everything',
-    description: 'HTTP pings every 10s for mission-critical apps.',
-    color: 'text-blue-500',
-  },
-  {
-    icon: Cpu,
-    title: 'AI Root Cause',
-    description: 'Gemini 2.5 Flash analyzes logs & commits automatically.',
-    color: 'text-purple-500',
-  },
-  {
-    icon: Bell,
-    title: 'Smart Alerts',
-    description: 'Discord, Slack, and Webhooks. No noise, just signal.',
-    color: 'text-green-500',
-  },
-  {
-    icon: Zap,
-    title: 'SSE Real-time',
-    description: 'Live latency charts and incident updates instantly.',
-    color: 'text-amber-500',
-  },
-];
 
 function LoginForm() {
   const router = useRouter();
@@ -111,115 +81,128 @@ function LoginForm() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-      className="w-full max-w-md px-4"
-    >
-      <Card className="relative overflow-hidden border-border/40 bg-card/60 backdrop-blur-xl">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-3xl font-bold tracking-tight">Sign In</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Enter your credentials to access your dashboard
-          </p>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="login-email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Email
+    <div className="w-full max-w-md px-6">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-100 mb-2">Welcome Back</h1>
+        <p className="text-slate-400 text-sm">Enter your credentials to access your dashboard</p>
+      </div>
+      
+      <div className="rounded-3xl border border-white/10 bg-slate-900/60 backdrop-blur-xl shadow-2xl shadow-violet-950/20 p-8 relative overflow-hidden">
+        {/* Glow edge */}
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-violet-500 to-transparent opacity-70" />
+        
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2.5">
+            <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Email Address
+            </label>
+            <Input
+              id="login-email"
+              placeholder="name@example.com"
+              type="email"
+              className="h-12 bg-black/40 border-white/10 focus-visible:ring-violet-500/50 placeholder:text-slate-600 rounded-xl px-4"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError('');
+              }}
+              required
+              autoComplete="email"
+            />
+          </div>
+          
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label htmlFor="login-password" className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Password
               </label>
+              <button 
+                type="button" 
+                onClick={() => toast({ title: 'Coming Soon', description: 'Password reset will be available in a future update.' })} 
+                className="text-xs text-violet-400 hover:text-violet-300 font-medium hover:underline bg-transparent border-none cursor-pointer"
+              >
+                Forgot password?
+              </button>
+            </div>
+            <div className="relative">
               <Input
-                id="login-email"
-                placeholder="name@example.com"
-                type="email"
-                className="bg-background/50"
-                value={email}
+                id="login-password"
+                placeholder="••••••••"
+                type={showPassword ? 'text' : 'password'}
+                className="h-12 bg-black/40 border-white/10 focus-visible:ring-violet-500/50 placeholder:text-slate-600 rounded-xl px-4 pr-12"
+                value={password}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  setPassword(e.target.value);
                   setError('');
                 }}
                 required
-                autoComplete="email"
+                autoComplete="current-password"
               />
+              <button 
+                type="button" 
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors" 
+                onClick={() => setShowPassword(!showPassword)} 
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="login-password" className="text-sm font-medium leading-none">
-                  Password
-                </label>
-                <button type="button" onClick={() => toast({ title: 'Coming Soon', description: 'Password reset will be available in a future update.' })} className="text-xs text-primary hover:underline bg-transparent border-none cursor-pointer">
-                  Forgot password?
-                </button>
-              </div>
-              <div className="relative">
-                <Input
-                  id="login-password"
-                  placeholder="••••••••"
-                  type={showPassword ? 'text' : 'password'}
-                  className="bg-background/50 pr-10"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setError('');
-                  }}
-                  required
-                  autoComplete="current-password"
-                />
-                <button type="button" className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
+          </div>
+          
+          <div className="flex items-center space-x-3 pt-1">
+            <div className="relative flex items-center">
               <input
                 id="remember-me"
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary"
+                className="peer h-4 w-4 shrink-0 rounded-[4px] border border-white/20 bg-black/40 checked:bg-violet-600 checked:border-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 transition-all appearance-none cursor-pointer"
               />
-              <label htmlFor="remember-me" className="text-sm font-medium leading-none cursor-pointer select-none">
-                Remember me
-              </label>
+              <svg className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-3 w-3 pointer-events-none opacity-0 peer-checked:opacity-100 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
-            
-            <AnimatePresence>
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="text-sm font-medium text-destructive"
-                  role="alert"
-                >
+            <label htmlFor="remember-me" className="text-sm font-medium text-slate-300 cursor-pointer select-none">
+              Remember me
+            </label>
+          </div>
+          
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                animate={{ opacity: 1, height: 'auto', marginTop: 12 }}
+                exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-sm font-medium text-red-400">
                   {error}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full relative overflow-hidden group" disabled={loading}>
-              <span className={cn("flex items-center justify-center transition-all", loading ? "opacity-0" : "opacity-100")}>
-                Sign In
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </span>
-              {loading && (
-                <Loader2 className="absolute inset-0 m-auto h-4 w-4 animate-spin" />
-              )}
-            </Button>
-            <div className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{' '}
-              <Link href="/register" className="font-medium text-primary hover:underline">
-                Create an account
-              </Link>
-            </div>
-          </CardFooter>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <Button 
+            type="submit" 
+            className="w-full h-12 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold transition-all shadow-lg shadow-violet-600/20 mt-6 relative overflow-hidden group active:scale-[0.98]" 
+            disabled={loading}
+          >
+            <span className={cn("flex items-center justify-center transition-all", loading ? "opacity-0" : "opacity-100")}>
+              Sign In
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </span>
+            {loading && (
+              <Loader2 className="absolute inset-0 m-auto h-5 w-5 animate-spin" />
+            )}
+          </Button>
         </form>
-      </Card>
-    </motion.div>
+      </div>
+      
+      <div className="text-center text-sm text-slate-400 mt-8">
+        Don&apos;t have an account?{' '}
+        <Link href="/register" className="font-bold text-violet-400 hover:text-violet-300 hover:underline transition-colors">
+          Create an account
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -229,90 +212,96 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="flex min-h-screen bg-background">
-      {/* Background decoration */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 blur-[120px]" />
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex overflow-hidden font-sans selection:bg-violet-500/30 selection:text-violet-200">
+      
+      {/* Background Gradients */}
+      <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600 blur-[150px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-fuchsia-600 blur-[150px]" />
       </div>
 
-      {/* Left Panel: Branding & Features */}
-      <div className="relative hidden w-1/2 flex-col justify-between border-r border-border/40 bg-card/20 p-12 lg:flex">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3"
-        >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-            <Activity className="h-6 w-6" />
+      {/* Left Panel: Visual/Branding (Hidden on mobile) */}
+      <div className="relative hidden lg:flex w-1/2 flex-col justify-between border-r border-white/5 bg-slate-900/30 p-12 z-10 backdrop-blur-sm">
+        <Link href="/" className="flex items-center gap-2.5 w-fit group">
+          <div className="h-10 w-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30 relative">
+            <Activity className="h-5 w-5 text-white animate-pulse" />
           </div>
-          <span className="text-2xl font-bold tracking-tight">PulseBoard</span>
-        </motion.div>
+          <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            PulseBoard
+          </span>
+        </Link>
 
-        <div className="space-y-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <h1 className="text-5xl font-extrabold leading-tight tracking-tight">
-              Observability <br />
-              <span className="bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">
-                Powered by AI.
+        <div className="space-y-8 max-w-md">
+          <div>
+            <h2 className="text-4xl font-extrabold leading-[1.1] tracking-tight mb-4">
+              Log back into your <br />
+              <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+                Observability Center.
               </span>
-            </h1>
-            <p className="mt-6 max-w-md text-xl text-muted-foreground">
-              Stop guessing why your services are down. PulseBoard monitors your infrastructure and provides instant, AI-generated root cause analysis.
+            </h2>
+            <p className="text-slate-400 text-lg leading-relaxed">
+              PulseBoard aggregates your logs, monitors your endpoints, and uses Gemini AI to auto-diagnose critical incidents.
             </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 gap-8">
-            {features.map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
-                className="space-y-3"
-              >
-                <div className={cn("flex h-10 w-10 items-center justify-center rounded-lg bg-background shadow-sm border border-border/40", feature.color)}>
-                  <feature.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
-                </div>
-              </motion.div>
-            ))}
+          </div>
+          
+          {/* Mockup Card showing system health */}
+          <div className="rounded-2xl border border-white/5 bg-slate-900/50 p-5 backdrop-blur-md shadow-xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+              <Bot className="h-24 w-24 text-violet-500" />
+            </div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-200">System Status</h3>
+                <p className="text-[10px] uppercase tracking-wider text-green-400 font-bold">All Systems Operational</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2">
+                <span className="text-slate-400">Active Monitors</span>
+                <span className="font-mono font-bold">12 / 12</span>
+              </div>
+              <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2 pt-1">
+                <span className="text-slate-400">Total Pings</span>
+                <span className="font-mono font-bold text-violet-400">148,204</span>
+              </div>
+              <div className="flex items-center justify-between text-xs pt-1">
+                <span className="text-slate-400">Avg Latency</span>
+                <span className="font-mono font-bold text-fuchsia-400">384ms</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="text-sm text-muted-foreground"
-        >
-          © {new Date().getFullYear()} PulseBoard — Built for microservices.
-        </motion.div>
+        <div className="text-sm text-slate-500 flex items-center gap-2">
+          <Terminal className="h-4 w-4" />
+          PulseBoard Platform v1.0.0
+        </div>
       </div>
 
       {/* Right Panel: Login Form */}
-      <div className="relative flex w-full items-center justify-center lg:w-1/2">
+      <div className="relative flex w-full flex-col justify-center items-center lg:w-1/2 z-10 p-6">
+        {/* Mobile Header */}
         <div className="absolute top-8 left-8 flex items-center gap-2 lg:hidden">
-          <Activity className="h-6 w-6 text-primary" />
-          <span className="text-xl font-bold">PulseBoard</span>
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-lg bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30">
+              <Activity className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-xl font-bold tracking-tight">PulseBoard</span>
+          </Link>
         </div>
         
-        <Suspense fallback={<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />}>
+        <Suspense fallback={
+          <div className="flex flex-col items-center justify-center text-slate-400">
+            <Loader2 className="h-8 w-8 animate-spin text-violet-500 mb-4" />
+            <p>Loading form...</p>
+          </div>
+        }>
           <LoginForm />
         </Suspense>
       </div>
-    </motion.div>
+    </div>
   );
 }
