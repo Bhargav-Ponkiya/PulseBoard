@@ -30,8 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (res.ok) {
           const body = await res.json();
-          if (body.success) {
-            setAuth(body.data.user, body.data.accessToken);
+          if (body && body.accessToken && body.user) {
+            setAuth(body.user, body.accessToken);
             return;
           }
         }

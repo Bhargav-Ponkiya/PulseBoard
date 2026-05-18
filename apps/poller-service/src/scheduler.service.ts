@@ -34,7 +34,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const response = await axios.get<{ success: boolean; data: MonitorConfig[] }>(
+        const response = await axios.get<any>(
           `${apiGatewayUrl}/internal/monitors/active`,
           {
             headers: { 'X-Internal-Secret': internalSecret },
@@ -42,7 +42,8 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
           },
         );
 
-        const monitors = response.data?.data ?? [];
+        const rawData = response.data;
+        const monitors = Array.isArray(rawData) ? rawData : (rawData?.data ?? []);
 
         for (const monitor of monitors) {
           this.registerMonitor(monitor);
