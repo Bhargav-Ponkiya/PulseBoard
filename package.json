@@ -34,8 +34,7 @@
     "logs:infra": "docker compose logs -f",
     "seed": "ts-node -r tsconfig-paths/register libs/database/src/seed.ts",
     "db:migrate": "npx typeorm-ts-node-commonjs migration:run -d libs/database/src/data-source.ts",
-    "db:generate": "npx typeorm-ts-node-commonjs migration:generate -d libs/database/src/data-source.ts",
-    "wake:prod": "node scripts/wake-services.js"
+    "db:generate": "npx typeorm-ts-node-commonjs migration:generate -d libs/database/src/data-source.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.70",
