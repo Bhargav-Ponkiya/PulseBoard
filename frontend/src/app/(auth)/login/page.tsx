@@ -59,7 +59,7 @@ function LoginForm() {
     abortRef.current = ac;
 
     try {
-      const data = await apiCall<{ accessToken: string; user: { id: string; email: string; name: string } }>(
+      const data = await apiCall<{ accessToken: string; refreshToken?: string; user: { id: string; email: string; name: string } }>(
         '/auth/login',
         {
           method: 'POST',
@@ -68,7 +68,7 @@ function LoginForm() {
         },
       );
       if (ac.signal.aborted) return;
-      setAuth(data.user, data.accessToken);
+      setAuth(data.user, data.accessToken, data.refreshToken);
       const from = searchParams.get('from') ?? '/dashboard';
       const allowedPaths = ['/dashboard', '/dashboard/incidents', '/dashboard/logs', '/dashboard/settings', '/dashboard/profile', '/projects/new'];
       const safePath = allowedPaths.some((p) => from.startsWith(p)) ? from : '/dashboard';

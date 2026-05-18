@@ -23,15 +23,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     async function restoreSession() {
       try {
+        const storedRefreshToken = typeof window !== 'undefined' ? localStorage.getItem('pulseboard_refresh_token') : null;
+
         const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
           method: 'POST',
           credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refreshToken: storedRefreshToken }),
         });
 
         if (res.ok) {
           const body = await res.json();
           if (body && body.accessToken && body.user) {
-            setAuth(body.user, body.accessToken);
+            setAuth(body.user, body.accessToken, body.refreshToken);
             return;
           }
         }

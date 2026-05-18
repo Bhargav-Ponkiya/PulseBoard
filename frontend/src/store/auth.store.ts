@@ -12,7 +12,7 @@ interface AuthState {
   user: User | null;
   accessToken: string | null;
   isLoading: boolean;
-  setAuth: (user: User, accessToken: string) => void;
+  setAuth: (user: User, accessToken: string, refreshToken?: string) => void;
   clearAuth: () => void;
   setLoading: (loading: boolean) => void;
   logout: () => Promise<void>;
@@ -22,15 +22,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   accessToken: null,
   isLoading: true,
-  setAuth: (user, accessToken) => {
+  setAuth: (user, accessToken, refreshToken) => {
     if (typeof window !== 'undefined') {
       document.cookie = "logged_in=true; path=/; max-age=604800; SameSite=Lax";
+      if (refreshToken) {
+        localStorage.setItem('pulseboard_refresh_token', refreshToken);
+      }
     }
     set({ user, accessToken, isLoading: false });
   },
   clearAuth: () => {
     if (typeof window !== 'undefined') {
       document.cookie = "logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      localStorage.removeItem('pulseboard_refresh_token');
     }
     set({ user: null, accessToken: null, isLoading: false });
   },
@@ -48,6 +52,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
     if (typeof window !== 'undefined') {
       document.cookie = "logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      localStorage.removeItem('pulseboard_refresh_token');
     }
     set({ user: null, accessToken: null, isLoading: false });
   },

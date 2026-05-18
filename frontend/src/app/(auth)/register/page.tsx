@@ -68,7 +68,7 @@ export default function RegisterPage() {
     abortRef.current = ac;
 
     try {
-      const data = await apiCall<{ accessToken: string; user: { id: string; email: string; name: string } }>(
+      const data = await apiCall<{ accessToken: string; refreshToken?: string; user: { id: string; email: string; name: string } }>(
         '/auth/register',
         {
           method: 'POST',
@@ -77,7 +77,7 @@ export default function RegisterPage() {
         },
       );
       if (ac.signal.aborted) return;
-      setAuth(data.user, data.accessToken);
+      setAuth(data.user, data.accessToken, data.refreshToken);
       router.push('/dashboard');
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') return;

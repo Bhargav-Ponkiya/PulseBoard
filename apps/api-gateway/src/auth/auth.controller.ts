@@ -50,7 +50,7 @@ export class AuthController {
   ) {
     const result = await this.authService.register(dto);
     this.setRefreshCookie(res, result.refreshToken);
-    return { accessToken: result.accessToken, user: result.user };
+    return { accessToken: result.accessToken, user: result.user, refreshToken: result.refreshToken };
   }
 
   @Public()
@@ -62,7 +62,7 @@ export class AuthController {
   ) {
     const result = await this.authService.login(dto);
     this.setRefreshCookie(res, result.refreshToken);
-    return { accessToken: result.accessToken, user: result.user };
+    return { accessToken: result.accessToken, user: result.user, refreshToken: result.refreshToken };
   }
 
   @Public()
@@ -72,7 +72,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const token = req.cookies?.refresh_token as string | undefined;
+    const token = (req.cookies?.refresh_token as string | undefined) || (req.body?.refreshToken as string | undefined);
 
     if (!token) {
       throw new UnauthorizedException('Refresh token not found');
@@ -81,7 +81,7 @@ export class AuthController {
     const result = await this.authService.refreshToken(token);
     this.setRefreshCookie(res, result.refreshToken);
 
-    return { accessToken: result.accessToken, user: result.user };
+    return { accessToken: result.accessToken, user: result.user, refreshToken: result.refreshToken };
   }
 
   @UseGuards(JwtGuard)
