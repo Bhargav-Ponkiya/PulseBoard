@@ -204,7 +204,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <aside
         aria-label="Main navigation"
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 flex flex-col border-r border-border/50 bg-card/40 backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 w-64 flex flex-col border-r border-border/50 bg-card/40 backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0",
           !sidebarOpen && "-translate-x-full"
         )}
       >
@@ -365,7 +365,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Main Content Area */}
       <main aria-label="Main content" className="flex-1 flex flex-col relative overflow-hidden min-w-0">
         {/* Top Header */}
-        <header className="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-border/50 bg-background/60 backdrop-blur-md sticky top-0 z-30 shrink-0">
+        <header className="h-14 flex items-center justify-between px-4 sm:px-6 border-b border-border/50 bg-background/60 backdrop-blur-md sticky top-0 z-30 shrink-0">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
@@ -436,7 +436,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 relative scroll-smooth">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-6 relative scroll-smooth">
           <div className="mx-auto max-w-7xl w-full">
             <Breadcrumbs />
             <motion.div

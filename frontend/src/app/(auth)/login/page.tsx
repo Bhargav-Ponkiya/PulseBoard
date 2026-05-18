@@ -11,7 +11,8 @@ import {
   Eye,
   EyeOff,
   Terminal,
-  Bot
+  ShieldAlert,
+  Cpu
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,24 +84,24 @@ function LoginForm() {
   return (
     <div className="w-full max-w-md px-6">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-100 mb-2">Welcome Back</h1>
-        <p className="text-slate-400 text-sm">Enter your credentials to access your dashboard</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 mb-2">Welcome Back</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">Enter your credentials to access your dashboard</p>
       </div>
       
-      <div className="rounded-3xl border border-white/10 bg-slate-900/60 backdrop-blur-xl shadow-2xl shadow-violet-950/20 p-8 relative overflow-hidden">
+      <div className="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl shadow-2xl shadow-violet-950/5 dark:shadow-violet-950/20 p-8 relative overflow-hidden">
         {/* Glow edge */}
         <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-violet-500 to-transparent opacity-70" />
         
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2.5">
-            <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Email Address
             </label>
             <Input
               id="login-email"
               placeholder="name@example.com"
               type="email"
-              className="h-12 bg-black/40 border-white/10 focus-visible:ring-violet-500/50 placeholder:text-slate-600 rounded-xl px-4"
+              className="h-12 bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus-visible:ring-violet-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-600 rounded-xl px-4"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -113,13 +114,13 @@ function LoginForm() {
           
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <label htmlFor="login-password" className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <label htmlFor="login-password" className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Password
               </label>
               <button 
                 type="button" 
                 onClick={() => toast({ title: 'Coming Soon', description: 'Password reset will be available in a future update.' })} 
-                className="text-xs text-violet-400 hover:text-violet-300 font-medium hover:underline bg-transparent border-none cursor-pointer"
+                className="text-xs text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-medium hover:underline bg-transparent border-none cursor-pointer"
               >
                 Forgot password?
               </button>
@@ -129,7 +130,7 @@ function LoginForm() {
                 id="login-password"
                 placeholder="••••••••"
                 type={showPassword ? 'text' : 'password'}
-                className="h-12 bg-black/40 border-white/10 focus-visible:ring-violet-500/50 placeholder:text-slate-600 rounded-xl px-4 pr-12"
+                className="h-12 bg-slate-50 dark:bg-black/40 border-slate-200 dark:border-white/10 focus-visible:ring-violet-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-600 rounded-xl px-4 pr-12"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -140,7 +141,7 @@ function LoginForm() {
               />
               <button 
                 type="button" 
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors" 
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors" 
                 onClick={() => setShowPassword(!showPassword)} 
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
@@ -156,11 +157,11 @@ function LoginForm() {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="peer h-4 w-4 shrink-0 rounded-[4px] border border-white/20 bg-black/40 checked:bg-violet-600 checked:border-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 transition-all appearance-none cursor-pointer"
+                className="peer h-4 w-4 shrink-0 rounded-[4px] border border-slate-300 dark:border-white/20 bg-slate-50 dark:bg-black/40 checked:bg-violet-600 checked:border-violet-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 transition-all appearance-none cursor-pointer"
               />
               <svg className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-3 w-3 pointer-events-none opacity-0 peer-checked:opacity-100 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
-            <label htmlFor="remember-me" className="text-sm font-medium text-slate-300 cursor-pointer select-none">
+            <label htmlFor="remember-me" className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none">
               Remember me
             </label>
           </div>
@@ -173,7 +174,7 @@ function LoginForm() {
                 exit={{ opacity: 0, height: 0, marginTop: 0 }}
                 className="overflow-hidden"
               >
-                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-sm font-medium text-red-400">
+                <div className="p-3 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-sm font-medium text-red-600 dark:text-red-400">
                   {error}
                 </div>
               </motion.div>
@@ -182,7 +183,7 @@ function LoginForm() {
 
           <Button 
             type="submit" 
-            className="w-full h-12 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold transition-all shadow-lg shadow-violet-600/20 mt-6 relative overflow-hidden group active:scale-[0.98]" 
+            className="w-full h-12 rounded-xl bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-500 text-white font-bold transition-all shadow-lg shadow-violet-600/20 mt-6 relative overflow-hidden group active:scale-[0.98]" 
             disabled={loading}
           >
             <span className={cn("flex items-center justify-center transition-all", loading ? "opacity-0" : "opacity-100")}>
@@ -196,9 +197,9 @@ function LoginForm() {
         </form>
       </div>
       
-      <div className="text-center text-sm text-slate-400 mt-8">
+      <div className="text-center text-sm text-slate-500 dark:text-slate-400 mt-8">
         Don&apos;t have an account?{' '}
-        <Link href="/register" className="font-bold text-violet-400 hover:text-violet-300 hover:underline transition-colors">
+        <Link href="/register" className="font-bold text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 hover:underline transition-colors">
           Create an account
         </Link>
       </div>
@@ -212,64 +213,55 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex overflow-hidden font-sans selection:bg-violet-500/30 selection:text-violet-200">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-violet-500/30 selection:text-violet-900 dark:selection:text-violet-200">
       
       {/* Background Gradients */}
-      <div className="absolute inset-0 pointer-events-none opacity-30 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600 blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-fuchsia-600 blur-[150px]" />
+      <div className="fixed inset-0 pointer-events-none opacity-30 dark:opacity-20 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-violet-400 dark:bg-violet-600 blur-[150px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-400 dark:bg-indigo-600 blur-[150px]" />
       </div>
 
       {/* Left Panel: Visual/Branding (Hidden on mobile) */}
-      <div className="relative hidden lg:flex w-1/2 flex-col justify-between border-r border-white/5 bg-slate-900/30 p-12 z-10 backdrop-blur-sm">
+      <div className="relative hidden lg:flex w-1/2 flex-col justify-between border-r border-slate-200 dark:border-white/5 bg-white/50 dark:bg-slate-900/30 p-12 z-10 backdrop-blur-sm">
         <Link href="/" className="flex items-center gap-2.5 w-fit group">
           <div className="h-10 w-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30 relative">
             <Activity className="h-5 w-5 text-white animate-pulse" />
           </div>
-          <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
             PulseBoard
           </span>
         </Link>
 
         <div className="space-y-8 max-w-md">
           <div>
-            <h2 className="text-4xl font-extrabold leading-[1.1] tracking-tight mb-4">
+            <h2 className="text-4xl font-extrabold leading-[1.1] tracking-tight mb-4 text-slate-900 dark:text-white">
               Log back into your <br />
-              <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 Observability Center.
               </span>
             </h2>
-            <p className="text-slate-400 text-lg leading-relaxed">
-              PulseBoard aggregates your logs, monitors your endpoints, and uses Gemini AI to auto-diagnose critical incidents.
+            <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+              PulseBoard aggregates your logs, monitors your endpoints, and uses AI to auto-diagnose critical incidents.
             </p>
           </div>
-          
-          {/* Mockup Card showing system health */}
-          <div className="rounded-2xl border border-white/5 bg-slate-900/50 p-5 backdrop-blur-md shadow-xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-              <Bot className="h-24 w-24 text-violet-500" />
-            </div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+
+          <div className="space-y-6 pt-4">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20">
+                <ShieldAlert className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-200">System Status</h3>
-                <p className="text-[10px] uppercase tracking-wider text-green-400 font-bold">All Systems Operational</p>
+                <h3 className="font-bold text-slate-900 dark:text-slate-200">Continuous Monitoring</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Real-time uptime checks and instant incident alerts.</p>
               </div>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2">
-                <span className="text-slate-400">Active Monitors</span>
-                <span className="font-mono font-bold">12 / 12</span>
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-fuchsia-100 dark:bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400 border border-fuchsia-200 dark:border-fuchsia-500/20">
+                <Cpu className="h-5 w-5" />
               </div>
-              <div className="flex items-center justify-between text-xs border-b border-white/5 pb-2 pt-1">
-                <span className="text-slate-400">Total Pings</span>
-                <span className="font-mono font-bold text-violet-400">148,204</span>
-              </div>
-              <div className="flex items-center justify-between text-xs pt-1">
-                <span className="text-slate-400">Avg Latency</span>
-                <span className="font-mono font-bold text-fuchsia-400">384ms</span>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-slate-200">AI Diagnostics</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Automated root cause analysis powered by Gemini.</p>
               </div>
             </div>
           </div>
@@ -277,25 +269,25 @@ export default function LoginPage() {
 
         <div className="text-sm text-slate-500 flex items-center gap-2">
           <Terminal className="h-4 w-4" />
-          PulseBoard Platform v1.0.0
+          PulseBoard Platform
         </div>
       </div>
 
       {/* Right Panel: Login Form */}
-      <div className="relative flex w-full flex-col justify-center items-center lg:w-1/2 z-10 p-6">
+      <div className="relative flex w-full flex-col justify-center items-center lg:w-1/2 z-10 p-6 min-h-screen">
         {/* Mobile Header */}
         <div className="absolute top-8 left-8 flex items-center gap-2 lg:hidden">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="h-8 w-8 rounded-lg bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30">
               <Activity className="h-4 w-4 text-white" />
             </div>
-            <span className="text-xl font-bold tracking-tight">PulseBoard</span>
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">PulseBoard</span>
           </Link>
         </div>
         
         <Suspense fallback={
-          <div className="flex flex-col items-center justify-center text-slate-400">
-            <Loader2 className="h-8 w-8 animate-spin text-violet-500 mb-4" />
+          <div className="flex flex-col items-center justify-center text-slate-500">
+            <Loader2 className="h-8 w-8 animate-spin text-violet-600 mb-4" />
             <p>Loading form...</p>
           </div>
         }>

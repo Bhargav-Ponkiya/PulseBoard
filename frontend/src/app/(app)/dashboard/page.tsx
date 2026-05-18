@@ -143,25 +143,25 @@ export default function DashboardPage() {
       variants={container}
       initial="hidden"
       animate="show"
-      className="space-y-10 pb-20"
+      className="space-y-6 pb-6"
     >
       {/* Premium Header */}
-      <motion.header variants={item} className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-4">
+      <motion.header variants={item} className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-primary/5 text-primary border-primary/20">
+            <Badge variant="outline" className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest bg-primary/5 text-primary border-primary/20">
               Live Monitoring
             </Badge>
             {summary && summary.activeIncidents > 0 && (
-              <Badge variant="destructive" className="px-3 py-1 text-[10px] font-black uppercase tracking-widest animate-pulse">
+              <Badge variant="destructive" className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest animate-pulse">
                 {summary.activeIncidents} Active Incidents
               </Badge>
             )}
           </div>
           <div className="space-y-1">
-            <h1 className="text-5xl font-black tracking-tight">{selectedProject?.name}</h1>
-            <p className="text-muted-foreground font-medium flex items-center gap-2">
-              <Globe className="h-4 w-4" />
+            <h1 className="text-3xl font-black tracking-tight">{selectedProject?.name}</h1>
+            <p className="text-muted-foreground text-sm font-medium flex items-center gap-2">
+              <Globe className="h-3.5 w-3.5" />
               Monitoring {selectedProject?.githubRepo || 'External API'}
             </p>
           </div>
@@ -169,17 +169,16 @@ export default function DashboardPage() {
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
-            size="lg"
             onClick={handleRefresh}
             disabled={loading || isRefreshing}
-            className="rounded-2xl h-14 border-border/40 bg-card/40 backdrop-blur-md px-6 shadow-xl shadow-black/5"
+            className="rounded-xl h-10 border-border/40 bg-card/40 backdrop-blur-md px-4 shadow-sm"
           >
             <RefreshCcw className={cn("mr-2 h-4 w-4 transition-all", isRefreshing && "animate-spin")} />
             {isRefreshing ? 'Syncing...' : 'Refresh'}
           </Button>
           <Link href="/dashboard/settings?tab=channels">
-            <Button size="lg" className="rounded-2xl h-14 px-8 shadow-xl shadow-primary/25 font-bold">
-              <Plus className="mr-2 h-5 w-5" />
+            <Button className="rounded-xl h-10 px-4 shadow-sm font-bold">
+              <Plus className="mr-2 h-4 w-4" />
               Alert Channel
             </Button>
           </Link>
@@ -251,7 +250,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 gap-10 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {/* Charts Section */}
         <motion.div variants={item} className="xl:col-span-2 space-y-6">
           <Card className="border-border/40 bg-card/40 backdrop-blur-md overflow-hidden">

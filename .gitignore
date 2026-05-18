@@ -8,6 +8,7 @@ dist/
 frontend/.next/
 out/
 build/
+*.tsbuildinfo
 
 # Environment / Secrets
 .env
