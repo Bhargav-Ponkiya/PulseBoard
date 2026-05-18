@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAuthStore } from '@/store/auth.store';
 import { API_BASE_URL } from '@/lib/config';
 
@@ -12,6 +12,7 @@ import { API_BASE_URL } from '@/lib/config';
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { setAuth, setLoading, accessToken } = useAuthStore();
   const isLoading = useAuthStore((s) => s.isLoading);
+  const restoreRef = useRef(false);
 
   useEffect(() => {
     // If we already have an in-memory token (fresh login/register),
@@ -20,6 +21,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       return;
     }
+
+    if (restoreRef.current) return;
+    restoreRef.current = true;
 
     async function restoreSession() {
       try {
