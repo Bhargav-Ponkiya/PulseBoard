@@ -88,8 +88,9 @@ This will keep your services awake permanently.
 ## Step 4: Vercel Frontend Deployment
 
 1. Go to [Vercel](https://vercel.com/) and connect your GitHub repository.
-2. Import the `frontend` folder (set the Root Directory to `frontend`).
-3. Set the Environment Variable:
+2. Import the `frontend` folder (set the **Root Directory** to `frontend`).
+3. Set the following **Environment Variables**:
    - `NEXT_PUBLIC_API_URL` = (Your Render API Gateway URL, e.g., `https://pulseboard-api-gateway.onrender.com`)
+   - `NEXT_PUBLIC_INGESTOR_URL` = (Your Render Ingestor URL, e.g., `https://pulseboard-ingestor-service.onrender.com`)
 4. Click **Deploy**.
-5. Once deployed, take the resulting Vercel URL and update the `FRONTEND_URL` environment variable in your Render dashboard (in the Env Group) to ensure CORS works correctly.
+5. Once deployed, copy your Vercel deployment URL (e.g., `https://pulseboard.vercel.app`) and update the **`FRONTEND_URL`** variable in your Render Env Group (`pulseboard-env`) to ensure CORS policies allow live telemetry and dashboard synchronization!
