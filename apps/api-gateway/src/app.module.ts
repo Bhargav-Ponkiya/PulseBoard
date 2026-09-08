@@ -25,7 +25,8 @@ import { AlertChannelsModule } from './alert-channels/alert-channels.module';
 import { GithubModule } from './github/github.module';
 import { UsersModule } from './users/users.module';
 import { AiModule } from './ai/ai.module';
-import { KeepAliveModule } from './keep-alive/keep-alive.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { KeepAliveService } from './keep-alive/keep-alive.service';
 
 @Module({
   controllers: [HealthController],
@@ -49,7 +50,7 @@ import { KeepAliveModule } from './keep-alive/keep-alive.module';
     GithubModule,
     UsersModule,
     AiModule,
-    KeepAliveModule,
+    ScheduleModule.forRoot(),
   ],
   providers: [
     {
@@ -79,6 +80,7 @@ import { KeepAliveModule } from './keep-alive/keep-alive.module';
         new Redis(configService.getOrThrow<string>('REDIS_URL')),
       inject: [ConfigService],
     },
+    KeepAliveService,
   ],
 })
 export class AppModule implements NestModule {
