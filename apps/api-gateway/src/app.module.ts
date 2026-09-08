@@ -25,6 +25,7 @@ import { AlertChannelsModule } from './alert-channels/alert-channels.module';
 import { GithubModule } from './github/github.module';
 import { UsersModule } from './users/users.module';
 import { AiModule } from './ai/ai.module';
+import { KeepAliveModule } from './keep-alive/keep-alive.module';
 
 @Module({
   controllers: [HealthController],
@@ -48,6 +49,7 @@ import { AiModule } from './ai/ai.module';
     GithubModule,
     UsersModule,
     AiModule,
+    KeepAliveModule,
   ],
   providers: [
     {
